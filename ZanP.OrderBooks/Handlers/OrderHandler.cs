@@ -62,11 +62,15 @@ namespace ZanP.OrderBooks.Handlers
 
             int i = 0;
             bool finished = false;
+            bool notPossible = false;
             
             List<OrderItem> orders = new List<OrderItem>();
             
             while(!finished)
             {
+                if(notPossible)
+                    throw new Exception("Cannot buy within your account balances.");
+
                 OrderItemBalance item = p_orderItemBalances[i];
                 decimal amount = item.Order.Amount;
                 decimal diff = p_order.Amount - (totalAmount + amount);
@@ -84,6 +88,8 @@ namespace ZanP.OrderBooks.Handlers
                 if(item.ExchangeBalance.EUR <= 0.00000001M || amount <= 0)
                 {
                     i++;
+                    finished = false; // we're not finished cause we are poor men :/
+                    notPossible = (i >= (p_orderItemBalances.Count() - 1));
                     continue;
                 }
                 
@@ -112,10 +118,8 @@ namespace ZanP.OrderBooks.Handlers
                 
                 i++;
 
-                if(i > p_orderItemBalances.Count() -1)
-                {
-                    finished = true;
-                }
+                // zero based index and funny stuff like this
+                notPossible = (i >= (p_orderItemBalances.Count() - 1));
             }
 
             return new BestPrice(orders, totalPrice);
