@@ -46,16 +46,10 @@ namespace ZanP.OrderBooks.Handlers
             // we'll use integrated quick sort to sort in ascending order by order price
             orderItemBalances.Sort((x,y) => x.Order.Price.CompareTo(y.Order.Price));
 
-            return GetBuyingBestPrice(p_order, orderItemBalances);
+            return GetBestBuyingPrice(p_order, orderItemBalances);
         }
 
-        private BestPrice Selling(Order p_order)
-        {
-
-            return null;
-        }
-
-        private BestPrice GetBuyingBestPrice(Order p_order, List<OrderItemBalance> p_orderItemBalances)
+        private BestPrice GetBestBuyingPrice(Order p_order, List<OrderItemBalance> p_orderItemBalances)
         {
             double totalAmount = .0;
             double totalPrice = .0;
@@ -87,13 +81,93 @@ namespace ZanP.OrderBooks.Handlers
                     finished = false; // no, we are not finished yet ... we'd be if we could afford whole thing
                 }
 
+                // decreasing EUR and increasing amount of BTC
                 item.ExchangeBalance.DecreaseEUR(itemPrice);
+                item.ExchangeBalance.IncreaseBTC(amount);
 
                 totalAmount += amount;
                 totalPrice += itemPrice;
                 orders.Add(item);
                 
                 i++;
+
+                if(i > p_orderItemBalances.Count() -1)
+                {
+                    finished = true;
+                }
+            }
+
+            return new BestPrice(orders, totalPrice);
+        }
+
+        private BestPrice Selling(Order p_order)
+        {
+
+            List<OrderItemBalance> orderItemBalances = new List<OrderItemBalance>();
+
+            foreach(var exchange in m_exchanges)
+            {
+                foreach(var bid in exchange.Bids)
+                {
+                    OrderItemBalance orderItemBalance = new OrderItemBalance(exchange.Balance, bid.Order);
+                    orderItemBalances.Add(orderItemBalance);
+                }
+            }
+
+            // we'll use integrated quick sort to sort in ascending order by order price
+            orderItemBalances.Sort((x,y) => x.Order.Price.CompareTo(y.Order.Price));
+            // but when we're selling, we wanna get max possible price, so let's reverse list to descending order
+            orderItemBalances.Reverse();
+
+            return GetBestSellingPrice(p_order, orderItemBalances);
+        }
+
+        private BestPrice GetBestSellingPrice(Order p_order, List<OrderItemBalance> p_orderItemBalances)
+        {
+            double totalAmount = .0;
+            double totalPrice = .0;
+
+            int i = 0;
+            bool finished = false;
+            
+            List<OrderItem> orders = new List<OrderItem>();
+
+            while(!finished)
+            {
+                OrderItemBalance item = p_orderItemBalances[i];
+                double amount = item.Order.Amount;
+                double diff = p_order.Amount - (totalAmount + amount);
+                double itemPrice = (item.Order.Price * amount);
+
+                // we don't wanna buy too much, if diff is negative, we have to split whole amount
+                if(diff <= 0)
+                {
+                    finished = true;
+                    amount = item.Order.Amount + diff;
+                }
+
+                // we can sell only that much as we have on our balance
+                if((item.ExchangeBalance.BTC - amount) < 0)
+                {
+                    amount = item.ExchangeBalance.BTC / item.Order.Amount;
+                    itemPrice = (item.Order.Price * amount);
+                    finished = false; // no, we are not finished yet ... we'd be if we could sell whole thing
+                }
+
+                // increasing EUR and decreasing amount of BTC
+                item.ExchangeBalance.IncreaseEUR(itemPrice);
+                item.ExchangeBalance.DecreaseBTC(amount);
+
+                totalAmount += amount;
+                totalPrice += itemPrice;
+                orders.Add(item);
+                
+                i++;
+
+                if(i > p_orderItemBalances.Count() - 1)
+                {
+                    finished = true;
+                }
             }
 
             return new BestPrice(orders, totalPrice);

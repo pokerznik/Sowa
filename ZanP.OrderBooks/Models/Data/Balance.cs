@@ -23,23 +23,21 @@ namespace ZanP.OrderBooks.Models.Data
         public void DecreaseEUR(double p_val)
         {
             EUR -= p_val;
-            CalculateBTC();
         }
 
         public void DecreaseBTC(double p_val)
         {
             BTC -= p_val;
-            CalculateEUR();
         }
 
-        private void CalculateEUR()
+        public void IncreaseEUR(double p_val)
         {
-            EUR = BTC / m_EUR_BTC;
+            EUR += p_val;
         }
 
-        private void CalculateBTC()
+        public void IncreaseBTC(double p_val)
         {
-            BTC = EUR * m_EUR_BTC;
+            BTC += p_val;
         }
 
         public double BTC { get; private set; }
