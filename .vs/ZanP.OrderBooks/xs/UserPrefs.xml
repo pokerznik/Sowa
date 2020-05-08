@@ -1,0 +1,27 @@
+﻿<Properties StartupConfiguration="{F06E330A-9B27-44F7-A9AF-09F598D30614}|Default">
+  <MonoDevelop.Ide.ItemProperties.ZanP.OrderBooks PreferredExecutionTarget="MonoDevelop.Default" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="ZanP.OrderBooks/Handlers/DataHandler.cs">
+    <Files>
+      <File FileName="ZanP.OrderBooks/Handlers/DataHandler.cs" Line="1" Column="1" />
+    </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State name="__root__">
+          <Node name="ZanP.OrderBooks" expanded="True">
+            <Node name="ZanP.OrderBooks" expanded="True">
+              <Node name="Handlers" expanded="True">
+                <Node name="DataHandler.cs" selected="True" />
+              </Node>
+            </Node>
+          </Node>
+        </State>
+      </Pad>
+    </Pads>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MultiItemStartupConfigurations />
+</Properties>
