@@ -1,0 +1,13 @@
+/Users/zanpokerznik/Projects/Sowa/ZanP.OrderBooks/bin/Debug/netcoreapp3.0/ZanP.OrderBooks
+/Users/zanpokerznik/Projects/Sowa/ZanP.OrderBooks/bin/Debug/netcoreapp3.0/ZanP.OrderBooks.deps.json
+/Users/zanpokerznik/Projects/Sowa/ZanP.OrderBooks/bin/Debug/netcoreapp3.0/ZanP.OrderBooks.runtimeconfig.json
+/Users/zanpokerznik/Projects/Sowa/ZanP.OrderBooks/bin/Debug/netcoreapp3.0/ZanP.OrderBooks.runtimeconfig.dev.json
+/Users/zanpokerznik/Projects/Sowa/ZanP.OrderBooks/bin/Debug/netcoreapp3.0/ZanP.OrderBooks.dll
+/Users/zanpokerznik/Projects/Sowa/ZanP.OrderBooks/bin/Debug/netcoreapp3.0/ZanP.OrderBooks.pdb
+/Users/zanpokerznik/Projects/Sowa/ZanP.OrderBooks/obj/Debug/netcoreapp3.0/ZanP.OrderBooks.csprojAssemblyReference.cache
+/Users/zanpokerznik/Projects/Sowa/ZanP.OrderBooks/obj/Debug/netcoreapp3.0/ZanP.OrderBooks.AssemblyInfoInputs.cache
+/Users/zanpokerznik/Projects/Sowa/ZanP.OrderBooks/obj/Debug/netcoreapp3.0/ZanP.OrderBooks.AssemblyInfo.cs
+/Users/zanpokerznik/Projects/Sowa/ZanP.OrderBooks/obj/Debug/netcoreapp3.0/ZanP.OrderBooks.dll
+/Users/zanpokerznik/Projects/Sowa/ZanP.OrderBooks/obj/Debug/netcoreapp3.0/ZanP.OrderBooks.pdb
+/Users/zanpokerznik/Projects/Sowa/ZanP.OrderBooks/bin/Debug/netcoreapp3.0/Newtonsoft.Json.dll
+/Users/zanpokerznik/Projects/Sowa/ZanP.OrderBooks/obj/Debug/netcoreapp3.0/ZanP.OrderBooks.csproj.CopyComplete
