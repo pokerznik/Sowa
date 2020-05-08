@@ -9,5 +9,6 @@ namespace ZanP.OrderBooks.Models
         [JsonProperty("AcqTime")]
         public DateTime Acquired { get; set; }
         public List<Bid> Bids { get; set; }
+        public Balance Balance { get; set; }
     }
 }

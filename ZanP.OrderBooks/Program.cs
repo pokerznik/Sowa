@@ -1,22 +1,12 @@
-﻿using System;
-using System.IO;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
+﻿using ZanP.OrderBooks.Handlers;
 
 namespace ZanP.OrderBooks
 {
     class Program
     {
-
-        private static string[] ReadFile()
-        {
-            return File.ReadAllLines("data");
-        }
-
         static void Main(string[] args)
         {
-            var lines = ReadFile();
-            Console.WriteLine("Hello World!");
+            DataHandler data = new DataHandler("data");
         }
     }
 }
