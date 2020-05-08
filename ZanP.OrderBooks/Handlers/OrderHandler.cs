@@ -64,7 +64,7 @@ namespace ZanP.OrderBooks.Handlers
             bool finished = false;
             bool notPossible = false;
             
-            List<OrderItem> orders = new List<OrderItem>();
+            List<OrderItemBalance> orders = new List<OrderItemBalance>();
             
             while(!finished)
             {
@@ -111,6 +111,8 @@ namespace ZanP.OrderBooks.Handlers
                 totalPrice += itemPrice;
 
                 // change to actual values, which depends on balance constraints
+                item.OriginalAmount = item.Order.Amount;
+                item.OriginalPrice = item.Order.Price;
                 item.Order.Amount = amount;
                 item.Order.Price = itemPrice;
 
@@ -154,30 +156,46 @@ namespace ZanP.OrderBooks.Handlers
 
             int i = 0;
             bool finished = false;
+            bool notPossible = false;
             
-            List<OrderItem> orders = new List<OrderItem>();
+            List<OrderItemBalance> orders = new List<OrderItemBalance>();
 
             while(!finished)
             {
+                if(notPossible)
+                    throw new Exception("Cannot buy within your account balances.");
+                
                 OrderItemBalance item = p_orderItemBalances[i];
                 decimal amount = item.Order.Amount;
                 decimal diff = p_order.Amount - (totalAmount + amount);
                 decimal itemPrice = (item.Order.Price * amount);
 
-                // we don't wanna buy too much, if diff is negative, we have to split whole amount
+                // we don't wanna sell too much, if diff is negative, we have to split whole amount
                 if(diff <= 0)
                 {
                     finished = true;
                     amount = item.Order.Amount + diff;
+                    itemPrice = (item.Order.Price * amount);
                 }
 
-                // we can sell only that much as we have on our balance
-                if((item.ExchangeBalance.BTC - amount) < 0)
+                // there are very tiny differences sometimes
+                if(item.ExchangeBalance.BTC <= 0.00000001M || amount <= 0)
                 {
-                    amount = item.ExchangeBalance.BTC / item.Order.Amount;
-                    itemPrice = (item.Order.Price * amount);
-                    finished = false; // no, we are not finished yet ... we'd be if we could sell whole thing
+                    i++;
+                    finished = false; // we're not finished cause we are poor men :/
+                    notPossible = (i >= (p_orderItemBalances.Count() - 1));
+                    continue;
                 }
+
+                // if balance is not sufficient, we need to to buy as much as we can
+                decimal balanceDiff = (item.ExchangeBalance.BTC - amount);
+                if(balanceDiff < 0.000001M)
+                {
+                    amount = item.ExchangeBalance.BTC;
+                    itemPrice = (item.Order.Price * amount);
+                    finished = false; // we're not finished cause we couldn't use our balance fully
+                }
+
 
                 // increasing EUR and decreasing amount of BTC
                 item.ExchangeBalance.IncreaseEUR(itemPrice);
@@ -185,14 +203,19 @@ namespace ZanP.OrderBooks.Handlers
 
                 totalAmount += amount;
                 totalPrice += itemPrice;
+
+                // change to actual values, which depends on balance constraints
+                item.OriginalAmount = item.Order.Amount;
+                item.OriginalPrice = item.Order.Price;
+                item.Order.Amount = amount;
+                item.Order.Price = itemPrice;
+
                 orders.Add(item);
                 
                 i++;
 
-                if(i > p_orderItemBalances.Count() - 1)
-                {
-                    finished = true;
-                }
+                // zero based index and funny stuff like this
+                notPossible = (i >= (p_orderItemBalances.Count() - 1));
             }
 
             return new BestPrice(orders, totalPrice);

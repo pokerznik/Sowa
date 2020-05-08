@@ -12,18 +12,19 @@ namespace ZanP.OrderBooks
             OrderHandler orderHandler = new OrderHandler();
 
             OrderType type = OrderType.Buy;
-            decimal amount = 14.42M;
+            decimal amount = 9M;
             Order buyOrder = new Order(type, amount);
             BestPrice bestBuy = orderHandler.Process(buyOrder);
             Console.WriteLine(bestBuy);
 
+            // without data resetting, previous sell/buy will impact on future results
             orderHandler.ResetData(); // if we wanna re-gather data and reset existing balances
 
             OrderType sellType = OrderType.Sell;
-            decimal sellAmount = 9;
+            decimal sellAmount = 9M;
             Order sellOrder = new Order(sellType, sellAmount);
-            /*BestPrice bestSell = orderHandler.Process(sellOrder);
-            Console.WriteLine(bestSell);*/
+            BestPrice bestSell = orderHandler.Process(sellOrder);
+            Console.WriteLine(bestSell);
         }
     }
 }

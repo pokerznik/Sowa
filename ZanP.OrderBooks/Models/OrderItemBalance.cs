@@ -14,5 +14,7 @@ namespace ZanP.OrderBooks.Models
         }
 
         public Balance ExchangeBalance { get; private set; }
+        public decimal OriginalPrice { get; set; }
+        public decimal OriginalAmount { get; set; }
     }
 }
