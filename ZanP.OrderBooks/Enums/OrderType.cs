@@ -1,6 +1,6 @@
 namespace ZanP.OrderBooks.Enums
 {
-    public enum OrderBookType 
+    public enum OrderType 
     {
         Buy,
         Sell

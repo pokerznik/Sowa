@@ -1,5 +1,5 @@
 using System.IO;
-using ZanP.OrderBooks.Models;
+using ZanP.OrderBooks.Models.Data;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using System;
@@ -12,13 +12,12 @@ namespace ZanP.OrderBooks.Handlers
     public class DataHandler
     {
         private string m_filePath;
-        public List<Exchange> Exchanges { get; private set; }
+        private List<Exchange> m_exchanges;
 
         public DataHandler(string p_filePath)
         {
             m_filePath = p_filePath;
-            Exchanges = new List<Exchange>();
-            PrepareData();
+            m_exchanges = new List<Exchange>();
         }
 
         private string[] ReadFile()
@@ -33,7 +32,7 @@ namespace ZanP.OrderBooks.Handlers
                 string[] separated = line.Split('\t'); // separated[0] ... timestamp; separated[1] ... json data we're interested in
                 Exchange exchange = JsonConvert.DeserializeObject<Exchange>(separated[1]);
                 SetBalance(exchange); // Random balance is set for every Exchange
-                Exchanges.Add(exchange);
+                m_exchanges.Add(exchange);
             }
         }
 
@@ -54,7 +53,8 @@ namespace ZanP.OrderBooks.Handlers
 
         public List<Exchange> GetExchanges()
         {
-            return Exchanges;
+            PrepareData();
+            return m_exchanges;
         }
     }
 }

@@ -1,4 +1,4 @@
-namespace ZanP.OrderBooks.Models
+namespace ZanP.OrderBooks.Models.Data
 {
     public class Balance
     {
