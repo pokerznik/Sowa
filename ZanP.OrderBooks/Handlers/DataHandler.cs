@@ -41,7 +41,7 @@ namespace ZanP.OrderBooks.Handlers
             int minBalance = 0;
             int maxBalance = 2000;
             Random rnd = new Random();
-            double balance = rnd.NextDouble() * (maxBalance - minBalance) + minBalance;
+            decimal balance = new decimal(rnd.NextDouble() * (maxBalance - minBalance) + minBalance);
             p_exchange.Balance = new Balance(balance);
         }
 

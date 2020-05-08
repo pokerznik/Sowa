@@ -30,6 +30,12 @@ namespace ZanP.OrderBooks.Handlers
             m_exchanges = m_dataHandler.GetExchanges();
         }
 
+        // refresh all existing balances
+        public void ResetData()
+        {
+            GetExchanges();
+        }
+
         private BestPrice Buying(Order p_order)
         {
             List<OrderItemBalance> orderItemBalances = new List<OrderItemBalance>();
@@ -51,8 +57,8 @@ namespace ZanP.OrderBooks.Handlers
 
         private BestPrice GetBestBuyingPrice(Order p_order, List<OrderItemBalance> p_orderItemBalances)
         {
-            double totalAmount = .0;
-            double totalPrice = .0;
+            decimal totalAmount = .0M;
+            decimal totalPrice = .0M;
 
             int i = 0;
             bool finished = false;
@@ -62,24 +68,34 @@ namespace ZanP.OrderBooks.Handlers
             while(!finished)
             {
                 OrderItemBalance item = p_orderItemBalances[i];
-                double amount = item.Order.Amount;
-                double diff = p_order.Amount - (totalAmount + amount);
-                double itemPrice = (item.Order.Price * amount);
+                decimal amount = item.Order.Amount;
+                decimal diff = p_order.Amount - (totalAmount + amount);
+                decimal itemPrice = (item.Order.Price * amount);
 
                 // we don't wanna buy too much, if diff is negative, we have to split whole amount
                 if(diff <= 0)
                 {
                     finished = true;
                     amount = item.Order.Amount + diff;
+                    itemPrice = (item.Order.Price * amount);
                 }
 
+                // there are very tiny differences sometimes
+                if(item.ExchangeBalance.EUR <= 0.00000001M || amount <= 0)
+                {
+                    i++;
+                    continue;
+                }
+                
                 // if balance is not sufficient, we need to to buy as much as we can
-                if((item.ExchangeBalance.EUR - itemPrice) < 0)
+                decimal balanceDiff = (item.ExchangeBalance.EUR - itemPrice);
+                if(balanceDiff < 0.000001M)
                 {
                     amount = item.ExchangeBalance.EUR / item.Order.Price;
                     itemPrice = (item.Order.Price * amount);
-                    finished = false; // no, we are not finished yet ... we'd be if we could afford whole thing
+                    finished = false; // we're not finished cause we couldn't use our balance fully
                 }
+
 
                 // decreasing EUR and increasing amount of BTC
                 item.ExchangeBalance.DecreaseEUR(itemPrice);
@@ -87,6 +103,11 @@ namespace ZanP.OrderBooks.Handlers
 
                 totalAmount += amount;
                 totalPrice += itemPrice;
+
+                // change to actual values, which depends on balance constraints
+                item.Order.Amount = amount;
+                item.Order.Price = itemPrice;
+
                 orders.Add(item);
                 
                 i++;
@@ -124,8 +145,8 @@ namespace ZanP.OrderBooks.Handlers
 
         private BestPrice GetBestSellingPrice(Order p_order, List<OrderItemBalance> p_orderItemBalances)
         {
-            double totalAmount = .0;
-            double totalPrice = .0;
+            decimal totalAmount = .0M;
+            decimal totalPrice = .0M;
 
             int i = 0;
             bool finished = false;
@@ -135,9 +156,9 @@ namespace ZanP.OrderBooks.Handlers
             while(!finished)
             {
                 OrderItemBalance item = p_orderItemBalances[i];
-                double amount = item.Order.Amount;
-                double diff = p_order.Amount - (totalAmount + amount);
-                double itemPrice = (item.Order.Price * amount);
+                decimal amount = item.Order.Amount;
+                decimal diff = p_order.Amount - (totalAmount + amount);
+                decimal itemPrice = (item.Order.Price * amount);
 
                 // we don't wanna buy too much, if diff is negative, we have to split whole amount
                 if(diff <= 0)
@@ -181,6 +202,8 @@ namespace ZanP.OrderBooks.Handlers
             if(p_order.Amount <= 0)
                 throw new Exception("Order amount should be greater than zero.");
 
+            WriteToConsole(p_order);
+
             if(p_order.Type == OrderType.Buy)
             {
                 return Buying(p_order);
@@ -189,6 +212,16 @@ namespace ZanP.OrderBooks.Handlers
             {
                 return Selling(p_order);
             }
+        }
+
+        private void WriteToConsole(Order p_order)
+        {
+            string actionToString = "Buying";
+
+            if(p_order.Type == OrderType.Sell)
+                actionToString = "Selling";
+
+            Console.WriteLine($"Processing order of {actionToString} {p_order.Amount} BTC ...");
         }
     }
 }

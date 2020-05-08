@@ -1,46 +1,45 @@
+using System;
+
 namespace ZanP.OrderBooks.Models.Data
 {
     public class Balance
     {
-        private static double m_EUR_BTC = .00011; // fixed value, 1 EUR = 0.00011 BTC, as it was on May 8
+        private static decimal m_EUR_BTC = 0.00011M; // fixed value, 1 EUR = 0.00011 BTC, as it was on May 8
 
-        public Balance(double p_eur)
+        public Balance(decimal p_eur)
         {
             EUR = p_eur;
             BTC = p_eur * m_EUR_BTC;
         }
 
-        /// <summary>
-        /// Convert Bitcoins quantity to EUR
-        /// </summary>
-        /// <param name="p_btc">Quantity of Bitcoins</param>
-        /// <returns></returns>
-        public static double ConvertBTC_EUR(double p_btc)
+        public void DecreaseEUR(decimal p_val)
         {
-            return p_btc / m_EUR_BTC;
+            decimal toSet = p_val;
+
+            if(EUR - p_val < 0)
+            {
+               toSet = Math.Round(EUR - p_val, 3);
+            }
+
+            EUR -= toSet;
         }
 
-        public void DecreaseEUR(double p_val)
-        {
-            EUR -= p_val;
-        }
-
-        public void DecreaseBTC(double p_val)
+        public void DecreaseBTC(decimal p_val)
         {
             BTC -= p_val;
         }
 
-        public void IncreaseEUR(double p_val)
+        public void IncreaseEUR(decimal p_val)
         {
             EUR += p_val;
         }
 
-        public void IncreaseBTC(double p_val)
+        public void IncreaseBTC(decimal p_val)
         {
             BTC += p_val;
         }
 
-        public double BTC { get; private set; }
-        public double EUR { get; private set; }
+        public decimal BTC { get; private set; }
+        public decimal EUR { get; private set; }
     }
 }

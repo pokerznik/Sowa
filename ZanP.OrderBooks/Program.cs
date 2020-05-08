@@ -1,6 +1,7 @@
 ﻿using ZanP.OrderBooks.Handlers;
 using ZanP.OrderBooks.Enums;
 using ZanP.OrderBooks.Models;
+using System;
 
 namespace ZanP.OrderBooks
 {
@@ -11,14 +12,18 @@ namespace ZanP.OrderBooks
             OrderHandler orderHandler = new OrderHandler();
 
             OrderType type = OrderType.Buy;
-            double amount = 9;
+            decimal amount = 4.16M;
             Order buyOrder = new Order(type, amount);
-            BestPrice price = orderHandler.Process(buyOrder);
+            BestPrice bestBuy = orderHandler.Process(buyOrder);
+            Console.WriteLine(bestBuy);
+
+            orderHandler.ResetData(); // if we wanna re-gather data and reset existing balances
 
             OrderType sellType = OrderType.Sell;
-            double sellAmount = 9;
+            decimal sellAmount = 9;
             Order sellOrder = new Order(sellType, sellAmount);
             BestPrice bestSell = orderHandler.Process(sellOrder);
+            Console.WriteLine(bestSell);
         }
     }
 }
