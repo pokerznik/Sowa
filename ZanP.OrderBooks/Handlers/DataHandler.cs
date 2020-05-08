@@ -39,7 +39,7 @@ namespace ZanP.OrderBooks.Handlers
         private void SetBalance(Exchange p_exchange)
         {
             int minBalance = 0;
-            int maxBalance = 1400;
+            int maxBalance = 45000;
             Random rnd = new Random();
             double balance = rnd.NextDouble() * (maxBalance - minBalance) + minBalance;
             p_exchange.Balance = new Balance(balance);

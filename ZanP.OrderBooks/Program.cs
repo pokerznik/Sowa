@@ -9,7 +9,7 @@ namespace ZanP.OrderBooks
         static void Main(string[] args)
         {
             OrderType type = OrderType.Buy;
-            double amount = 9;
+            double amount = 4;
 
             Order buyOrder = new Order(type, amount);
 

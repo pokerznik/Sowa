@@ -5,8 +5,6 @@ namespace ZanP.OrderBooks.Models.Data
 {
     public class OrderBook
     {
-        private string m_type;
-
         public int? Id { get; set; }
         public DateTime Time { get; set; }
         public string Type { get; set; }
