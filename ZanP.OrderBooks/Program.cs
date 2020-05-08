@@ -21,7 +21,7 @@ namespace ZanP.OrderBooks
             orderHandler.ResetData(); // if we wanna re-gather data and reset existing balances
 
             OrderType sellType = OrderType.Sell;
-            decimal sellAmount = 9M;
+            decimal sellAmount = 1M;
             Order sellOrder = new Order(sellType, sellAmount);
             BestPrice bestSell = orderHandler.Process(sellOrder);
             Console.WriteLine(bestSell);

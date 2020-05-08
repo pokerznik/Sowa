@@ -18,15 +18,19 @@ namespace ZanP.OrderBooks.Handlers
         private List<Exchange> m_exchanges;
         private string m_path;
 
-        public OrderHandler(string p_path = "data")
+        public OrderHandler(decimal p_customBalance=0.0M, string p_path = "data")
         {
             m_path = p_path;
+            m_dataHandler = new DataHandler(m_path);
+            
+            if(p_customBalance != 0.0M)
+                m_dataHandler.SetCustomBalance(p_customBalance);
+
             GetExchanges();
         }
 
         private void GetExchanges()
         {
-            m_dataHandler = new DataHandler(m_path);
             m_exchanges = m_dataHandler.GetExchanges();
         }
 

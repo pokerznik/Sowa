@@ -13,6 +13,8 @@ namespace ZanP.OrderBooks.Handlers
     {
         private string m_filePath;
         private List<Exchange> m_exchanges;
+        private bool m_customBalance = false;
+        private decimal m_customBalanceValue = .0M;
 
         public DataHandler(string p_filePath)
         {
@@ -23,6 +25,12 @@ namespace ZanP.OrderBooks.Handlers
         private string[] ReadFile()
         {
             return File.ReadAllLines(m_filePath);
+        }
+
+        public void SetCustomBalance(decimal p_balance)
+        {
+            m_customBalance = true;
+            m_customBalanceValue = p_balance;
         }
 
         private void Deserialize(string[] p_lines)
@@ -42,7 +50,12 @@ namespace ZanP.OrderBooks.Handlers
             int maxBalance = 2000;
             Random rnd = new Random();
             decimal balance = new decimal(rnd.NextDouble() * (maxBalance - minBalance) + minBalance);
-            p_exchange.Balance = new Balance(balance);
+            decimal toSet = balance;
+            
+            if(m_customBalance)
+                toSet = m_customBalanceValue;
+
+            p_exchange.Balance = new Balance(toSet);
         }
 
         private void PrepareData()
