@@ -14,7 +14,7 @@ namespace ZanP.OrderBooks
             Order buyOrder = new Order(type, amount);
 
             OrderHandler order = new OrderHandler();
-            order.Process(buyOrder);
+            BestPrice price = order.Process(buyOrder);
         }
     }
 }

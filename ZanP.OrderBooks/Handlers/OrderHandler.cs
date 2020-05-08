@@ -46,7 +46,7 @@ namespace ZanP.OrderBooks.Handlers
             // we'll use integrated quick sort to sort in ascending order by order price
             orderItemBalances.Sort((x,y) => x.Order.Price.CompareTo(y.Order.Price));
 
-            return GetBestPrice(p_order, orderItemBalances);
+            return GetBuyingBestPrice(p_order, orderItemBalances);
         }
 
         private BestPrice Selling(Order p_order)
@@ -55,9 +55,9 @@ namespace ZanP.OrderBooks.Handlers
             return null;
         }
 
-        private BestPrice GetBestPrice(Order p_order, List<OrderItemBalance> p_orderItemBalances)
+        private BestPrice GetBuyingBestPrice(Order p_order, List<OrderItemBalance> p_orderItemBalances)
         {
-            double boughtAmount = .0;
+            double totalAmount = .0;
             double totalPrice = .0;
 
             int i = 0;
@@ -69,16 +69,28 @@ namespace ZanP.OrderBooks.Handlers
             {
                 OrderItemBalance item = p_orderItemBalances[i];
                 double amount = item.Order.Amount;
-                double diff = p_order.Amount - (boughtAmount + amount);
+                double diff = p_order.Amount - (totalAmount + amount);
+                double itemPrice = (item.Order.Price * amount);
 
+                // we don't wanna buy too much, if diff is negative, we have to split whole amount
                 if(diff <= 0)
                 {
                     finished = true;
                     amount = item.Order.Amount + diff;
                 }
 
-                boughtAmount += amount;
-                totalPrice += (item.Order.Price * amount);
+                // if balance is not sufficient, we need to to buy as much as we can
+                if((item.ExchangeBalance.EUR - itemPrice) < 0)
+                {
+                    amount = item.ExchangeBalance.EUR / item.Order.Price;
+                    itemPrice = (item.Order.Price * amount);
+                    finished = false; // no, we are not finished yet ... we'd be if we could afford whole thing
+                }
+
+                item.ExchangeBalance.DecreaseEUR(itemPrice);
+
+                totalAmount += amount;
+                totalPrice += itemPrice;
                 orders.Add(item);
                 
                 i++;
