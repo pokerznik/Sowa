@@ -2,6 +2,7 @@
 using ZanP.OrderBooks.Enums;
 using ZanP.OrderBooks.Models;
 using System;
+using ZanP.OrderBooks.Models.Orders;
 
 namespace ZanP.OrderBooks
 {
@@ -9,21 +10,19 @@ namespace ZanP.OrderBooks
     {
         static void Main(string[] args)
         {
-            OrderHandler orderHandler = new OrderHandler();
+            MetaMarketHandler marketHandler = new MetaMarketHandler();
 
-            OrderType type = OrderType.Buy;
-            decimal amount = 9M;
-            Order buyOrder = new Order(type, amount);
-            BestPrice bestBuy = orderHandler.Process(buyOrder);
+            decimal amount = 4.25M;
+            Order buyOrder = new BuyingOrder(amount);
+            BestPrice bestBuy = marketHandler.ProcessOrder(buyOrder);
             Console.WriteLine(bestBuy);
 
             // without data resetting, previous sell/buy will impact on future results
-            orderHandler.ResetData(); // if we wanna re-gather data and reset existing balances
+            marketHandler.ResetData(); // if we wanna re-gather data and reset existing balances
 
-            OrderType sellType = OrderType.Sell;
-            decimal sellAmount = 1M;
-            Order sellOrder = new Order(sellType, sellAmount);
-            BestPrice bestSell = orderHandler.Process(sellOrder);
+            decimal sellAmount = 1.67M;
+            Order sellOrder = new SellingOrder(sellAmount);
+            BestPrice bestSell = marketHandler.ProcessOrder(sellOrder);
             Console.WriteLine(bestSell);
         }
     }

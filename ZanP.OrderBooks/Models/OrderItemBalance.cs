@@ -9,12 +9,12 @@ namespace ZanP.OrderBooks.Models
     {
         public OrderItemBalance(Balance p_balance, OrderBook p_order)
         {
-            Order = p_order;
-            ExchangeBalance = p_balance;
+            order = p_order;
+            exchangeBalance = p_balance;
         }
 
-        public Balance ExchangeBalance { get; private set; }
-        public decimal OriginalPrice { get; set; }
-        public decimal OriginalAmount { get; set; }
+        public Balance exchangeBalance { get; private set; }
+        public decimal originalPrice { get; set; }
+        public decimal originalAmount { get; set; }
     }
 }

@@ -5,10 +5,10 @@ namespace ZanP.OrderBooks.Models.Data
 {
     public class OrderBook
     {
-        public int? Id { get; set; }
-        public DateTime Time { get; set; }
-        public string Type { get; set; }
-        public decimal Amount { get; set; }
-        public decimal Price { get; set; }
+        public int? id { get; set; }
+        public DateTime time { get; set; }
+        public string type { get; set; }
+        public decimal amount { get; set; }
+        public decimal price { get; set; }
     }
 }

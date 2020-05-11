@@ -4,12 +4,12 @@ namespace ZanP.OrderBooks.Models.Data
 {
     public class Balance
     {
-        private static decimal m_EUR_BTC = 0.00011M; // fixed value, 1 EUR = 0.00011 BTC, as it was on May 8
+        private static decimal _EUR_BTC = 0.00011M; // fixed value, 1 EUR = 0.00011 BTC, as it was on May 8
 
         public Balance(decimal p_eur)
         {
             EUR = p_eur;
-            BTC = p_eur * m_EUR_BTC;
+            BTC = p_eur * _EUR_BTC;
         }
 
         public void DecreaseEUR(decimal p_val)
