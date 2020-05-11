@@ -42,7 +42,7 @@ namespace ZanP.OrderBooks.Handlers
         public BestPrice ProcessOrder(Order p_order)
         {
             if(p_order == null)
-                throw new Exception("Order cannot be processed, because is not valid.");
+                return null;
 
             if(p_order.amount <= 0)
                 throw new Exception("Order amount should be greater than zero.");
