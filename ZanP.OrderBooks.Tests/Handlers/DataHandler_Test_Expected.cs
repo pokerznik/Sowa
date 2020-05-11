@@ -15,13 +15,13 @@ namespace ZanP.OrderBooks.Tests.Handlers
         [Fact]
         public void GetExchanges_Valid_NotNull()
         {
-            Assert.NotNull(m_dataHandler.GetExchanges());
+            Assert.NotNull(m_dataHandler.LoadExchanges());
         }
 
         [Fact]
         public void GetExchanges_NotEmpty_True()
         {
-            var exchanges = m_dataHandler.GetExchanges();
+            var exchanges = m_dataHandler.LoadExchanges();
             Assert.NotEmpty(exchanges);
         }
     }

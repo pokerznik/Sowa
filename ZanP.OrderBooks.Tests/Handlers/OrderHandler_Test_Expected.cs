@@ -2,6 +2,7 @@ using Xunit;
 using ZanP.OrderBooks.Handlers;
 using ZanP.OrderBooks.Enums;
 using ZanP.OrderBooks.Models;
+using ZanP.OrderBooks.Models.Orders;
 using System;
 
 namespace ZanP.OrderBooks.Tests.Handlers
@@ -15,67 +16,61 @@ namespace ZanP.OrderBooks.Tests.Handlers
     */
     public class OrderHandler_Test_Expected
     {
-        private OrderHandler m_orderHandler;
+        private MetaMarketHandler _marketHandler;
 
         public OrderHandler_Test_Expected()
         {
-            m_orderHandler = new OrderHandler(9900M);
+            _marketHandler = new MetaMarketHandler(9900M);
         }
 
         [Fact]
         public void GetBestPrice_Selling_EqualTrue()
         {
-            OrderType type = OrderType.Sell;
             decimal sellAmount = 1M;
-            Order sellOrder = new Order(type, sellAmount);
-            BestPrice bestSell = m_orderHandler.Process(sellOrder);
-            Assert.Equal(bestSell.Price, 690M);
+            Order sellOrder = new SellingOrder(sellAmount);
+            BestPrice bestSell = _marketHandler.ProcessOrder(sellOrder);
+            Assert.Equal(bestSell.price, 690M);
         }
 
         [Fact]
         public void GetBestPrice_Buying_EqualTrue()
         {
-            OrderType type = OrderType.Buy;
             decimal buyAmount = 2.5M;
-            Order buyOrder = new Order(type, buyAmount);
-            BestPrice bestBuy = m_orderHandler.Process(buyOrder);
-            Assert.Equal(bestBuy.Price, 870M);
+            Order buyOrder = new BuyingOrder(buyAmount);
+            BestPrice bestBuy = _marketHandler.ProcessOrder(buyOrder);
+            Assert.Equal(bestBuy.price, 870M);
         }
 
         [Fact]
         public void GetBestPrice_Selling_NegativeAmountException()
         {
-            OrderType type = OrderType.Sell;
             decimal sellAmount = -1M;
-            Order sellOrder = new Order(type, sellAmount);
-            Assert.Throws<Exception>(() => m_orderHandler.Process(sellOrder));
+            Order sellOrder = new SellingOrder(sellAmount);
+            Assert.Throws<Exception>(() => _marketHandler.ProcessOrder(sellOrder));
         }
 
         [Fact]
         public void GetBestPrice_Buying_NegativeAmountFalse()
         {
-            OrderType type = OrderType.Buy;
             decimal buyAmount = -.74M;
-            Order buyOrder = new Order(type, buyAmount);
-            Assert.Throws<Exception>(() => m_orderHandler.Process(buyOrder));
+            Order buyOrder = new BuyingOrder(buyAmount);
+            Assert.Throws<Exception>(() => _marketHandler.ProcessOrder(buyOrder));
         }
 
         [Fact]
         public void GetBestPrice_Buying_UnsuitableBalanceException()
         {
-            OrderType type = OrderType.Buy;
             decimal buyAmount = 4M;
-            Order buyOrder = new Order(type, buyAmount);
-            Assert.Throws<Exception>(() => m_orderHandler.Process(buyOrder));
+            Order buyOrder = new BuyingOrder(buyAmount);
+            Assert.Throws<Exception>(() => _marketHandler.ProcessOrder(buyOrder));
         }
 
         [Fact]
         public void GetBestPrice_Selling_UnsuitableBalanceException()
         {
-            OrderType type = OrderType.Sell;
             decimal sellAmount = 4M;
-            Order sellOrder = new Order(type, sellAmount);
-            Assert.Throws<Exception>(() => m_orderHandler.Process(sellOrder));
+            Order sellOrder = new SellingOrder(sellAmount);
+            Assert.Throws<Exception>(() => _marketHandler.ProcessOrder(sellOrder));
         }
 
     }
